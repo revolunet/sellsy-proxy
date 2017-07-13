@@ -25,3 +25,7 @@ You'll get the raw result from the Sellsy API.
 
 Demo : https://jsbin.com/qerisus
 
+
+## See also
+
+ - [node-sellsy](http://github.com/revolunet/node-sellsy)
