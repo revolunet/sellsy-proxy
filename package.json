@@ -1,6 +1,6 @@
 {
   "name": "sellsy-proxy",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "Julien Bouquillon <julien@revolunet.com>",
   "description": "Basic Sellsy API proxy to make sellsy API available in the browser",
   "license": "MIT",
