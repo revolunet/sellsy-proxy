@@ -2,9 +2,16 @@ var express = require("express")
 var cors = require("cors")
 var bodyParser = require("body-parser")
 var Sellsy = require("node-sellsy")
+var fetch = require('node-fetch');
+
+var bodyParser = require('body-parser');
 
 app = express()
 app.use(cors())
+
+//app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 
 ;["CONSUMER_KEY", "CONSUMER_SECRET"].forEach(key => {
   if (!process.env[key]) {
@@ -30,7 +37,6 @@ app.get("/", (req, res) => {
       userSecret: req.headers['x-user-secret']
     }
   })
-  console.log("req.query.params", req.query.params)
   sellsy
     .api({
       method: req.query.method,
@@ -46,6 +52,41 @@ app.get("/", (req, res) => {
       })
     })
 })
+
+
+// proxify sellsy calls as-is
+// compat with node-bookeo client-side
+const sellsyProxy = (req, res) => {
+
+  var url = 'https://apifeed.sellsy.com/0/'
+
+  let params = "";
+  params += `&request=${req.body.request}`;
+  params += `&io_mode=${req.body.io_mode}`;
+  params += `&do_in=${encodeURIComponent(req.body.do_in)}`;
+
+  return fetch(url /*"http://127.0.0.1:8282"*/, {
+    method: req.method,
+    headers: {
+      'authorization': req.headers.authorization,
+      'content-type': req.headers['content-type']
+    },
+    body: params
+  }).then(r => r.json())
+  .then(json => {
+    res.json(json)
+    return json
+  }).catch(r => {
+    console.error(r)
+    console.log(r.text())
+    res.json({
+      error: r
+    })
+  })
+
+}
+
+app.post("/", sellsyProxy)
 
 const PORT = process.env.PORT || 8282
 

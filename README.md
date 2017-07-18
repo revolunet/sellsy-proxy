@@ -1,6 +1,6 @@
 # Sellsy proxy
 
-Basic Sellsy API proxy for full client side apps.
+Basic Sellsy API proxy; add CORS for full client side apps.
 
 [![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/revolunet/sellsy-proxy&env=CONSUMER_KEY&env=CONSUMER_SECRET)
 
@@ -18,7 +18,19 @@ npm start
 
 ## Call Sellsy API from your browser
 
-Using `GET` method, just pass `method` and `params` url query parameters, following Sellsy API docs.
+There are two ways to query the sellsy API :
+
+### Default : "transparent" proxy
+
+Replace the default sellsy API endpoint with your proxy URL and it will relay all calls.
+
+Also works with [node-sellsy](https://github.com/revolunet/node-sellsy) `endPoint` parameter.
+
+### via /GET
+
+Using `GET` method, pass `method` and `params` url query parameters, following Sellsy API docs.
+
+`params` must be URL encoded.
 
 Also add oauth headers for the proxy :
 
@@ -27,6 +39,7 @@ Also add oauth headers for the proxy :
 const makeProxyRequest = ({ endPoint, method, params }) => {
   // create the proxy URL
   var urlParams = encodeURIComponent(params);
+  // build url for the proxy
   var url = `${endPoint}?method=${method}&params=${urlParams}`;
   // use native fetch API and convert to JSON
   var request = new Request(url, {
@@ -45,12 +58,12 @@ const makeProxyRequest = ({ endPoint, method, params }) => {
 makeProxyRequest({
   endPoint: 'http://127.0.0.1:8282',
   method: 'Document.getList',
-  params: {
+  params: JSON.stringify({
     doctype: 'invoice',
     search: {
       contains: 'test',
     },
-  },
+  }),
 }).then(data => {
   console.log(data);
 });
