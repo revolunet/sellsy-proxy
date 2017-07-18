@@ -2,7 +2,7 @@
 
 Basic Sellsy API proxy for full client side apps.
 
-[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/revolunet/sellsy-proxy&env=CONSUMER_KEY&env=CONSUMER_SECRET&env=USER_TOKEN&env=USER_SECRET)
+[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/revolunet/sellsy-proxy&env=CONSUMER_KEY&env=CONSUMER_SECRET)
 
 Server is deployed with `consumer` oauth keys and client must give its sellsy oauth token in each request.
 
