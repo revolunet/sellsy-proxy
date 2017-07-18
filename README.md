@@ -4,22 +4,57 @@ Basic Sellsy API proxy for full client side apps.
 
 [![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/revolunet/sellsy-proxy&env=CONSUMER_KEY&env=CONSUMER_SECRET&env=USER_TOKEN&env=USER_SECRET)
 
+Server is deployed with `consumer` oauth keys and client must give its sellsy oauth token in each request.
+
 ## Usage
 
-Start the server  with all the API credentials as environment variables
+Start the server with all the consumer API keys as environment variables
 
 ```sh
 set CONSUMER_KEY="xxx";
 set CONSUMER_SECRET="xxx";
-set USER_TOKEN="xxx";
-set USER_SECRET="xxx";
 npm start
 ```
-
 
 ## Call Sellsy API from your browser
 
 Using `GET` method, just pass `method` and `params` url query parameters, following Sellsy API docs.
+
+Also add oauth headers for the proxy :
+
+```js
+// call to the API
+const makeProxyRequest = ({ endPoint, method, params }) => {
+  // create the proxy URL
+  var urlParams = encodeURIComponent(params);
+  var url = `${endPoint}?method=${method}&params=${urlParams}`;
+  // use native fetch API and convert to JSON
+  var request = new Request(url, {
+    headers: new Headers({
+      'X-USER-TOKEN': 'aaa',
+      'X-USER-SECRET': 'bbb',
+    }),
+    mode: 'cors'
+  });
+  return fetch(request).then(r => r.json()).catch(e => {
+    console.log('e', e);
+    throw e;
+  });
+};
+
+makeProxyRequest({
+  endPoint: 'http://127.0.0.1:8282',
+  method: 'Document.getList',
+  params: {
+    doctype: 'invoice',
+    search: {
+      contains: 'test',
+    },
+  },
+}).then(data => {
+  console.log(data);
+});
+```
 
 You'll get the raw result from the Sellsy API.
 

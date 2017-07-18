@@ -6,7 +6,7 @@ var Sellsy = require("node-sellsy")
 app = express()
 app.use(cors())
 
-;["CONSUMER_KEY", "CONSUMER_SECRET", "USER_TOKEN", "USER_SECRET"].forEach(key => {
+;["CONSUMER_KEY", "CONSUMER_SECRET"].forEach(key => {
   if (!process.env[key]) {
     console.error(`⚠️  missing ${key} environment variable. please refer to the README.\n`)
     process.exit(1)
@@ -14,12 +14,20 @@ app.use(cors())
 })
 
 app.get("/", (req, res) => {
+  console.log("req.headers", req.headers)
+  if (!req.headers['x-user-token'] || !req.headers['x-user-secret']) {
+    res.json({
+      error: true,
+      msg: 'missing headers'
+    })
+    return;
+  }
   var sellsy = new Sellsy({
     creds: {
       consumerKey: process.env.CONSUMER_KEY,
       consumerSecret: process.env.CONSUMER_SECRET,
-      userToken: process.env.USER_TOKEN,
-      userSecret: process.env.USER_SECRET
+      userToken: req.headers['x-user-token'],
+      userSecret: req.headers['x-user-secret']
     }
   })
   console.log("req.query.params", req.query.params)
