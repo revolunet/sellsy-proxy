@@ -21,7 +21,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 })
 
 app.get("/", (req, res) => {
-  console.log("req.headers", req.headers)
   if (!req.headers['x-user-token'] || !req.headers['x-user-secret']) {
     res.json({
       error: true,
