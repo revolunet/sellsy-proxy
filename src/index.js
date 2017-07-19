@@ -78,7 +78,6 @@ const sellsyProxy = (req, res) => {
     return json
   }).catch(r => {
     console.error(r)
-    console.log(r.text())
     res.json({
       error: r
     })
