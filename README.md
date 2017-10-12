@@ -71,7 +71,7 @@ makeProxyRequest({
 
 You'll get the raw result from the Sellsy API.
 
-Demo : https://jsbin.com/qerisus
+Demo : https://codesandbox.io/s/wy45kppq0k
 
 
 ## See also
